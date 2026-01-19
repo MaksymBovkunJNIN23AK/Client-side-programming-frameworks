@@ -1,0 +1,94 @@
+<form class="crm-container" [formGroup]="form" (ngSubmit)="onRegister()">
+  <h2 class="crm-title">Mini CRM – Company</h2>
+
+  <div class="grid-2">
+    <div class="field">
+      <label>Company name *</label>
+      <input formControlName="companyName" [class.invalid]="isInvalid('companyName')" />
+      <div class="error" *ngIf="isInvalid('companyName')">
+        <div *ngIf="form.get('companyName')?.errors?.['required']">Required</div>
+        <div *ngIf="form.get('companyName')?.errors?.['minlength']">Min 2 chars</div>
+        <div *ngIf="form.get('companyName')?.errors?.['maxlength']">Max 30 chars</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Company code (numbers)</label>
+      <input formControlName="companyCode" [class.invalid]="isInvalid('companyCode')" />
+      <div class="error" *ngIf="isInvalid('companyCode')">Numbers only</div>
+    </div>
+
+    <div class="field">
+      <label>VAT registration code (digits or LT+digits)</label>
+      <input formControlName="vatCode" placeholder="LT123456789 or 123456789"
+             [class.invalid]="isInvalid('vatCode')" />
+      <div class="error" *ngIf="isInvalid('vatCode')">Valid: digits or LT + digits</div>
+    </div>
+
+    <div class="field">
+      <label>Address</label>
+      <input formControlName="address" />
+    </div>
+
+    <div class="field">
+      <label>Email *</label>
+      <input formControlName="email" [class.invalid]="isInvalid('email')" />
+      <div class="error" *ngIf="isInvalid('email')">
+        <div *ngIf="form.get('email')?.errors?.['required']">Required</div>
+        <div *ngIf="form.get('email')?.errors?.['email']">Invalid email</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Phone (optional)</label>
+      <input formControlName="phone" placeholder="+37065312345" [class.invalid]="isInvalid('phone')" />
+      <div class="help">Format: +37065312345, length 10–12</div>
+      <div class="error" *ngIf="isInvalid('phone')">Invalid phone format</div>
+    </div>
+  </div>
+
+  <hr />
+
+  <h3 class="section-title">Contacts</h3>
+
+  <div class="contacts-wrap" formArrayName="contacts">
+    <div class="contact-card" *ngFor="let contact of contacts.controls; let i = index" [formGroupName]="i">
+      <div class="contact-head">
+        <span>Contact #{{ i + 1 }}</span>
+        <button type="button" class="btn-danger" (click)="removeContact(i)" [disabled]="contacts.length === 1">
+          Remove
+        </button>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label>First name *</label>
+          <input formControlName="firstName" [class.invalid]="contactInvalid(i,'firstName')" />
+          <div class="error" *ngIf="contactInvalid(i,'firstName')">Required</div>
+        </div>
+
+        <div class="field">
+          <label>Last name *</label>
+          <input formControlName="lastName" [class.invalid]="contactInvalid(i,'lastName')" />
+          <div class="error" *ngIf="contactInvalid(i,'lastName')">Required</div>
+        </div>
+
+        <div class="field">
+          <label>Position</label>
+          <input formControlName="position" />
+        </div>
+
+        <div class="field">
+          <label>Phone</label>
+          <input formControlName="phone" placeholder="+37065312345" [class.invalid]="contactInvalid(i,'phone')" />
+          <div class="error" *ngIf="contactInvalid(i,'phone')">Invalid phone format</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button type="button" (click)="addContact()">Add contact</button>
+    <button type="submit" class="btn-primary">Register</button>
+  </div>
+</form>
