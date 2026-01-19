@@ -1,6 +1,17 @@
 <form class="crm-container" [formGroup]="form" (ngSubmit)="onRegister()">
   <h2 class="crm-title">Mini CRM – Company</h2>
 
+  <!-- SUCCESS / ERROR -->
+  <div *ngIf="successMsg"
+       style="padding:10px; border:1px solid #bbf7d0; background:#ecfdf5; border-radius:10px; margin-bottom:10px;">
+    {{ successMsg }}
+  </div>
+
+  <div *ngIf="errorMsg"
+       style="padding:10px; border:1px solid #fecaca; background:#fef2f2; border-radius:10px; margin-bottom:10px;">
+    {{ errorMsg }}
+  </div>
+
   <div class="grid-2">
     <div class="field">
       <label>Company name *</label>
@@ -89,6 +100,41 @@
 
   <div class="btn-row">
     <button type="button" (click)="addContact()">Add contact</button>
-    <button type="submit" class="btn-primary">Register</button>
+
+    <!-- Register button with loading -->
+    <button type="submit" class="btn-primary" [disabled]="saveLoading">
+      {{ saveLoading ? 'Saving...' : 'Register' }}
+    </button>
+  </div>
+
+  <hr />
+
+  <!-- LOADED DATA LIST -->
+  <h3 class="section-title">Saved companies</h3>
+
+  <div *ngIf="isLoading" style="margin-top:10px;">
+    Loading...
+  </div>
+
+  <div *ngIf="!isLoading && companies.length === 0" style="margin-top:10px;">
+    No companies yet.
+  </div>
+
+  <div *ngIf="!isLoading && companies.length > 0" style="display:grid; gap:10px; margin-top:10px;">
+    <div *ngFor="let c of companies"
+         style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff;">
+      <div style="display:flex; justify-content:space-between; gap:10px;">
+        <strong>{{ c.companyName }}</strong>
+      </div>
+
+      <div style="margin-top:6px; color:#374151;">
+        <div>Email: {{ c.email }}</div>
+        <div *ngIf="c.phone">Phone: {{ c.phone }}</div>
+        <div *ngIf="c.vatCode">VAT: {{ c.vatCode }}</div>
+        <div *ngIf="c.companyCode">Code: {{ c.companyCode }}</div>
+        <div *ngIf="c.address">Address: {{ c.address }}</div>
+        <div>Contacts: {{ c.contacts?.length || 0 }}</div>
+      </div>
+    </div>
   </div>
 </form>
